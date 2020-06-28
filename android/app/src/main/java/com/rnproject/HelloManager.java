@@ -32,6 +32,9 @@ import android.os.Bundle;
 import android.os.Looper;
 import androidx.annotation.RequiresPermission;
 import android.util.Log;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.*;
 
 import com.rnproject.GetLocation;
 import com.rnproject.SettingsUtil;
@@ -55,7 +58,6 @@ public class HelloManager extends ReactContextBaseJavaModule {
             ex.printStackTrace();
         }
     }
-
 
     @Override
     public String getName() {
@@ -190,4 +192,32 @@ public class HelloManager extends ReactContextBaseJavaModule {
         getLocation = new GetLocation(locationManager);
         getLocation.get(options, promise);
     }
+
+    @ReactMethod
+    public String getClients() {
+        BufferedReader br = null;
+        String data = "";
+        try {
+            br = new BufferedReader(new FileReader("/proc/net/arp"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line != null) {
+                    data = line;
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        return data;
+    }
+
+    @ReactMethod
+    public void getClientList(Callback cb) {
+        try {
+            cb.invoke(null, getClients());
+        } catch (Exception e) {
+            cb.invoke(e.toString(), null);
+        }
+    }
+
 }

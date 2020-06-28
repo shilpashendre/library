@@ -1,9 +1,3 @@
-/**
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 package com.rnproject;
 
 import android.annotation.SuppressLint;
@@ -17,14 +11,6 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.rnproject.CellularGeneration;
 import com.rnproject.ConnectionType;
 
-/**
- * This gets the connectivity status using a BroadcastReceiver. This method was deprecated on
- * Android from API level 24 (N) but we use this method still for any devices running below level
- * 24.
- *
- * <p>It has a few differences from the new NetworkCallback method: - Changes to the cellular
- * network effective type (eg. from 2g to 3g) will not trigger a callback
- */
 @SuppressWarnings("deprecation")
 public class BroadcastReceiverConnectivityReceiver extends ConnectivityReceiver {
     private final ConnectivityBroadcastReceiver mConnectivityBroadcastReceiver;
@@ -97,10 +83,6 @@ public class BroadcastReceiverConnectivityReceiver extends ConnectivityReceiver 
         updateConnectivity(connectionType, cellularGeneration, isInternetReachable);
     }
 
-    /**
-     * Class that receives intents whenever the connection type changes. NB: It is possible on some
-     * devices to receive certain connection type changes multiple times.
-     */
     private class ConnectivityBroadcastReceiver extends BroadcastReceiver {
 
         // TODO: Remove registered check when source of crash is found. t9846865

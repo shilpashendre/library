@@ -20,6 +20,8 @@ const App = () => {
   const [devicename, setDevieName] = useState("");
   const [devicenMacAddress, setDevieMacAddress] = useState("");
   const [latlong, setLatLong] = useState("");
+  const [connectedTo, setConnectedTo] = useState("");
+  const [connectedDeviceInfo, setConnectedDeviceInfo] = useState('');
 
   const persmission = async () => {
     try {
@@ -60,14 +62,21 @@ const App = () => {
     setDevieMacAddress(deviceMacAddress);
   });
 
-  wifidetails.fetch().then(res => {
-    console.log("TCL: App -> res", res)
+  NativeModules.HelloManager.getClientList((err, clientList) => { 
+    setConnectedDeviceInfo(clientList);
+
+  });
+
+  wifidetails.fetch().then(connection => {
+    if (connection !== undefined) {
+      setConnectedTo(connection)
+    } 
   });
 
 
   return (
 
-    <View>
+    <View style={{ margin: 10 }}>
       <Text>
         {"Device name: " + devicename + "\n"}
       </Text>
@@ -80,6 +89,36 @@ const App = () => {
           {"latitude: " + latlong.location.latitude + " \nlongitude: " + latlong.location.longitude + " \ntime: " + latlong.location.time + "\n"}
         </Text>
         : <Text>Wait</Text>}
+
+      {connectedTo !== "" && connectedTo.type === 'wifi'
+        ? <View>
+          <Text>{"connected type:   " + connectedTo.type}</Text>
+          <Text>{"isConnected:   " + connectedTo.isConnected}</Text>
+          <Text>{"isInternetReachable:   " + connectedTo.isInternetReachable}</Text>
+          <Text>{"isWifiEnabled:   " + connectedTo.isWifiEnabled}</Text>
+
+          <Text>{"bssid:   " + connectedTo.details.bssid}</Text>
+          <Text>{"frequency:   " + connectedTo.details.frequency}</Text>
+          <Text>{"ipAddress:   " + connectedTo.details.ipAddress}</Text>
+          <Text>{"isConnectionExpensive:   " + connectedTo.details.isConnectionExpensive}</Text>
+          <Text>{"ssid:   " + connectedTo.details.ssid}</Text>
+          <Text>{"strength:   " + connectedTo.details.strength}</Text>
+          <Text>{"subnet:   " + connectedTo.details.bssid + "\n"}</Text>
+        </View>
+
+        : connectedTo !== "" && connectedTo.type === 'cellular'
+          ? <View>
+            <Text>{"connected to:   " + connectedTo.type}</Text>
+
+            <Text>{"carrier:   " + connectedTo.details.carrier}</Text>
+            <Text>{"cellularGeneration:   " + connectedTo.details.cellularGeneration}</Text>
+            <Text>{"isConnectionExpensive:   " + connectedTo.details.isConnectionExpensive + "\n"}</Text>
+
+
+            <Text>{"List of device connected to mobile hotspot:\n"}</Text>
+            <Text style={{ fontSize: 12 }}>{connectedDeviceInfo}</Text>
+          </View>
+          : <Text>no connection found</Text>}
 
     </View>
   );
