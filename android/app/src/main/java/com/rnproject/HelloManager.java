@@ -56,6 +56,7 @@ public class HelloManager extends ReactContextBaseJavaModule {
         }
     }
 
+
     @Override
     public String getName() {
         return "HelloManager";

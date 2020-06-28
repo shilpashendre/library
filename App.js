@@ -13,6 +13,7 @@ import {
   PermissionsAndroid,
   NativeModules,
 } from 'react-native';
+import wifidetails from './wificonnection/index';
 
 
 const App = () => {
@@ -26,7 +27,7 @@ const App = () => {
       const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
         .then(res => {
           if (res === "granted") {
-            console.log("Thank you for your permission! :)");
+            console.log(" permission!");
           } else {
             console.log("You will not able to retrieve wifi available networks list");
           }
@@ -35,32 +36,34 @@ const App = () => {
       console.warn(err)
     }
   }
+
   useEffect(() => {
     persmission();
+    NativeModules.HelloManager.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 15000,
+    })
+      .then(async location => {
+        setLatLong({ location })
+      }).catch(error => {
+        const { code, message } = error;
+        console.warn(code, message);
+      });
+
   }, []);
 
   NativeModules.HelloManager.getDeviceName((err, name) => {
     setDevieName(name);
-    console.log(err, name);
   });
 
   NativeModules.HelloManager.getMacAddress((err, deviceMacAddress) => {
     setDevieMacAddress(deviceMacAddress);
-    console.log(err, deviceMacAddress);
   });
 
+  wifidetails.fetch().then(res => {
+    console.log("TCL: App -> res", res)
+  });
 
-  NativeModules.HelloManager.getCurrentPosition({
-    enableHighAccuracy: true,
-    timeout: 15000,
-  })
-    .then(async location => {
-      setLatLong({ location })
-      console.log("TCL: App -> location", location)
-    }).catch(error => {
-      const { code, message } = error;
-      console.warn(code, message);
-    });
 
   return (
 
@@ -74,7 +77,7 @@ const App = () => {
       </Text>
       {latlong.location !== undefined
         ? <Text>
-          {"Device latlong: " + latlong.location.latitude + latlong.location.longitude + latlong.location.time + "\n"}
+          {"latitude: " + latlong.location.latitude + " \nlongitude: " + latlong.location.longitude + " \ntime: " + latlong.location.time + "\n"}
         </Text>
         : <Text>Wait</Text>}
 
