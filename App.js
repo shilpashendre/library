@@ -13,7 +13,8 @@ import {
   PermissionsAndroid,
   NativeModules,
 } from 'react-native';
-import wifidetails from './wificonnection/index';
+
+import TestModule from './TestModule';
 
 
 const App = () => {
@@ -22,6 +23,15 @@ const App = () => {
   const [latlong, setLatLong] = useState("");
   const [connectedTo, setConnectedTo] = useState("");
   const [connectedDeviceInfo, setConnectedDeviceInfo] = useState('');
+  const [availableConnection, setAvailableConnection] = useState([]);
+
+  TestModule.getWifi().then(conn => {
+    setConnectedTo(conn)
+  });
+  TestModule.getAddress().then(macAddress => {
+    setDevieMacAddress(macAddress);
+
+  });
 
   const persmission = async () => {
     try {
@@ -41,52 +51,32 @@ const App = () => {
 
   useEffect(() => {
     persmission();
-    NativeModules.DeviceDetailsManager.getCurrentPosition({
-      enableHighAccuracy: true,
-      timeout: 15000,
-    })
-      .then(async location => {
-        setLatLong({ location })
-      }).catch(error => {
-        const { code, message } = error;
-        console.warn(code, message);
-      });
+    TestModule.getLocation().then(location => {
+      setLatLong(location);
+    });
 
+    TestModule.wifilist.loadWifiList(async (wifiStringList) => {
+      var wifiArray = await JSON.parse(wifiStringList);
+      if (wifiArray !== undefined) {
+        setAvailableConnection(wifiArray);
+      }
+      console.log("TCL: App -> wifiArray", wifiArray)
+    },
+      (error) => {
+        console.log(error);
+      }
+    );
   }, []);
-
-  NativeModules.DeviceDetailsManager.getDeviceName((err, name) => {
-    setDevieName(name);
-  });
-
-  NativeModules.DeviceDetailsManager.getMacAddress((err, deviceMacAddress) => {
-    setDevieMacAddress(deviceMacAddress);
-  });
-
-  NativeModules.DeviceDetailsManager.getClientList((err, clientList) => { 
-    setConnectedDeviceInfo(clientList);
-
-  });
-
-  wifidetails.fetch().then(connection => {
-    if (connection !== undefined) {
-      setConnectedTo(connection)
-    } 
-  });
-
 
   return (
 
     <View style={{ margin: 10 }}>
       <Text>
-        {"Device name: " + devicename + "\n"}
-      </Text>
-
-      <Text>
         {"Device mac address: " + devicenMacAddress + "\n"}
       </Text>
-      {latlong.location !== undefined
+      {latlong !== undefined
         ? <Text>
-          {"latitude: " + latlong.location.latitude + " \nlongitude: " + latlong.location.longitude + " \ntime: " + latlong.location.time + "\n"}
+          {"latitude: " + latlong.latitude + " \nlongitude: " + latlong.longitude + " \ntime: " + latlong.time + "\n"}
         </Text>
         : <Text>Wait</Text>}
 
@@ -119,6 +109,23 @@ const App = () => {
             <Text style={{ fontSize: 12 }}>{connectedDeviceInfo}</Text>
           </View>
           : <Text>no connection found</Text>}
+
+      <Text>{"Available wifi Connection:\n"}</Text>
+      {availableConnection.length > 0
+        ? availableConnection.map((list, i) => {
+          return (
+            <View key={i}>
+              <Text>{"BSSID:  " + list.BSSID}</Text>
+              <Text>{"SSID:   " + list.SSID}</Text>
+              <Text>{"capabilities:   " + list.capabilities}</Text>
+              <Text>{"frequency:  " + list.frequency}</Text>
+              <Text>{"level:  " + list.level}</Text>
+              <Text>{"timestamp:  " + list.timestamp + "\n"}</Text>
+            </View>
+          )
+        })
+
+        : <Text>No connection available</Text>}
 
     </View>
   );

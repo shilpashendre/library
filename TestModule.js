@@ -1,10 +1,4 @@
-/**
- * @format
- */
 
-import { AppRegistry } from 'react-native';
-import App from './App';
-import { name as appName } from './app.json';
 import wifidetails from './wificonnection/index';
 import Location from './Location/index';
 import DeviceDetail from './device/index';
@@ -43,5 +37,3 @@ async function getAddress() {
 
 
 export default { getWifi, getLocation, getAddress, wifilist }
-
-AppRegistry.registerComponent(appName, () => App);
