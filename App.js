@@ -41,7 +41,7 @@ const App = () => {
 
   useEffect(() => {
     persmission();
-    NativeModules.HelloManager.getCurrentPosition({
+    NativeModules.DeviceDetailsManager.getCurrentPosition({
       enableHighAccuracy: true,
       timeout: 15000,
     })
@@ -54,15 +54,15 @@ const App = () => {
 
   }, []);
 
-  NativeModules.HelloManager.getDeviceName((err, name) => {
+  NativeModules.DeviceDetailsManager.getDeviceName((err, name) => {
     setDevieName(name);
   });
 
-  NativeModules.HelloManager.getMacAddress((err, deviceMacAddress) => {
+  NativeModules.DeviceDetailsManager.getMacAddress((err, deviceMacAddress) => {
     setDevieMacAddress(deviceMacAddress);
   });
 
-  NativeModules.HelloManager.getClientList((err, clientList) => { 
+  NativeModules.DeviceDetailsManager.getClientList((err, clientList) => { 
     setConnectedDeviceInfo(clientList);
 
   });

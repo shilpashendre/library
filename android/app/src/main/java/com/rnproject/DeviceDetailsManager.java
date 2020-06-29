@@ -42,14 +42,13 @@ import com.rnproject.SettingsUtil;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class HelloManager extends ReactContextBaseJavaModule {
-
+public class DeviceDetailsManager extends ReactContextBaseJavaModule {
     public static final String NAME = "ReactNativeGetLocation";
 
     private LocationManager locationManager;
     private GetLocation getLocation;
 
-    public HelloManager(ReactApplicationContext reactcontext) {
+    public DeviceDetailsManager(ReactApplicationContext reactcontext) {
         super(reactcontext);
         try {
             locationManager = (LocationManager) reactcontext.getApplicationContext()
@@ -61,7 +60,7 @@ public class HelloManager extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "HelloManager";
+        return "DeviceDetailsManager";
     }
 
     public WifiInfo getWifiInfo() {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class HelloPackage implements ReactPackage {
+public class DeviceDetailsPackage implements ReactPackage {
 
     // Backward compatibility
     public List<Class<? extends JavaScriptModule>> createJSModules() {
@@ -27,7 +27,7 @@ public class HelloPackage implements ReactPackage {
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
         // We import the module file here
-        modules.add(new HelloManager(reactContext));
+        modules.add(new DeviceDetailsManager(reactContext));
 
         return modules;
     }
