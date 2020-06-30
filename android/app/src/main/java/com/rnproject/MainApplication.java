@@ -8,9 +8,11 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
-import java.lang.reflect.InvocationTargetException;
-import com.rnproject.DeviceDetailsPackage;
+import java.lang.reflect.InvocationTargetException; 
 import com.rnproject.NetInfoPackage;
+import com.rnproject.ReactNativeGetLocationPackage;
+import com.rnproject.RNDeviceInfo;
+import com.rnproject.AndroidWifiPackage;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -27,8 +29,11 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-          packages.add(new DeviceDetailsPackage());
-          packages.add(new NetInfoPackage());
+          // packages.add(new DeviceDetailsPackage());
+          packages.add(new NetInfoPackage()); 
+          packages.add(new ReactNativeGetLocationPackage()); 
+          packages.add(new RNDeviceInfo()); 
+          packages.add(new AndroidWifiPackage()); 
           return packages;
         }
 
