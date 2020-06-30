@@ -31,6 +31,9 @@
   "jest": {
     "preset": "react-native"
   },
+  "peerDependencies": {
+    "react-native": ">=0.44"
+  },
   "description": "wifi device details",
   "main": "index.js",
   "keywords": [
