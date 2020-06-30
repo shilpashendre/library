@@ -35,21 +35,29 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.*;
+import android.net.wifi.ScanResult;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.rnproject.GetLocation;
 import com.rnproject.SettingsUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import com.facebook.react.module.annotations.ReactModule;
 
+@ReactModule(name = DeviceDetailsManager.NAME)
 public class DeviceDetailsManager extends ReactContextBaseJavaModule {
     public static final String NAME = "ReactNativeGetLocation";
 
     private LocationManager locationManager;
-    private GetLocation getLocation;
+    private GetLocation getLocation; 
+    WifiManager wifi;
 
     public DeviceDetailsManager(ReactApplicationContext reactcontext) {
         super(reactcontext);
+        wifi = (WifiManager)reactcontext.getSystemService(Context.WIFI_SERVICE);
         try {
             locationManager = (LocationManager) reactcontext.getApplicationContext()
                     .getSystemService(Context.LOCATION_SERVICE);
@@ -60,7 +68,7 @@ public class DeviceDetailsManager extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "DeviceDetailsManager";
+        return NAME;
     }
 
     public WifiInfo getWifiInfo() {
@@ -216,6 +224,42 @@ public class DeviceDetailsManager extends ReactContextBaseJavaModule {
             cb.invoke(null, getClients());
         } catch (Exception e) {
             cb.invoke(e.toString(), null);
+        }
+    }
+
+    // Method to load wifi list into string via Callback. Returns a stringified
+    // JSONArray
+    @ReactMethod
+    public void loadWifiList(Callback successCallback, Callback errorCallback) {
+        try {
+            List<ScanResult> results = wifi.getScanResults();
+            JSONArray wifiArray = new JSONArray();
+
+            for (ScanResult result : results) {
+                JSONObject wifiObject = new JSONObject();
+                if (!result.SSID.equals("")) {
+                    try {
+                        wifiObject.put("SSID", result.SSID);
+                        wifiObject.put("BSSID", result.BSSID);
+                        wifiObject.put("capabilities", result.capabilities);
+                        wifiObject.put("frequency", result.frequency);
+                        wifiObject.put("level", result.level);
+                        wifiObject.put("timestamp", result.timestamp);
+                        // Other fields not added
+                        // wifiObject.put("operatorFriendlyName", result.operatorFriendlyName);
+                        // wifiObject.put("venueName", result.venueName);
+                        // wifiObject.put("centerFreq0", result.centerFreq0);
+                        // wifiObject.put("centerFreq1", result.centerFreq1);
+                        // wifiObject.put("channelWidth", result.channelWidth);
+                    } catch (JSONException e) {
+                        errorCallback.invoke(e.getMessage());
+                    }
+                    wifiArray.put(wifiObject);
+                }
+            }
+            successCallback.invoke(wifiArray.toString());
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
         }
     }
 

@@ -1,7 +1,6 @@
 {
-  "name": "RNProject",
-  "version": "0.0.1",
-  "private": true,
+  "name": "rnproject",
+  "version": "0.0.2",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -31,5 +30,13 @@
   },
   "jest": {
     "preset": "react-native"
-  }
+  },
+  "description": "wifi device details",
+  "main": "index.js",
+  "keywords": [
+    "wifi",
+    "device"
+  ],
+  "author": "shilpa s",
+  "license": "ISC"
 }
