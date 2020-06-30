@@ -13,11 +13,8 @@ import {
   PermissionsAndroid, 
   ScrollView
 } from 'react-native';
- 
 import wifidetails from './wificonnection/index';
 import NativeCalls from './NativeCalls'; 
- 
- 
 
 const App = () => {
   const [devicename, setDevieName] = useState("");
@@ -26,17 +23,6 @@ const App = () => {
   const [connectedTo, setConnectedTo] = useState("");
   const [connectedDeviceInfo, setConnectedDeviceInfo] = useState('');
   const [availableConnection, setAvailableConnection] = useState([]);
-<<<<<<< HEAD
-=======
-
-  TestModule.getWifi().then(conn => {
-    setConnectedTo(conn)
-  });
-  TestModule.getAddress().then(macAddress => {
-    setDevieMacAddress(macAddress);
-
-  });
->>>>>>> f433a3ea57e522866c118881266afa50fa4cc2e8
 
   const persmission = async () => {
     try {
@@ -56,7 +42,6 @@ const App = () => {
 
   useEffect(() => {
     persmission();
-<<<<<<< HEAD
     NativeCalls.getCurrentPosition({
       enableHighAccuracy: true,
       timeout: 15000,
@@ -100,34 +85,6 @@ const App = () => {
       <View style={{ margin: 10 }}>
         <Text>
           {"Device name: " + devicename + "\n"}
-=======
-    TestModule.getLocation().then(location => {
-      setLatLong(location);
-    });
-
-    TestModule.wifilist.loadWifiList(async (wifiStringList) => {
-      var wifiArray = await JSON.parse(wifiStringList);
-      if (wifiArray !== undefined) {
-        setAvailableConnection(wifiArray);
-      }
-      console.log("TCL: App -> wifiArray", wifiArray)
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }, []);
-
-  return (
-
-    <View style={{ margin: 10 }}>
-      <Text>
-        {"Device mac address: " + devicenMacAddress + "\n"}
-      </Text>
-      {latlong !== undefined
-        ? <Text>
-          {"latitude: " + latlong.latitude + " \nlongitude: " + latlong.longitude + " \ntime: " + latlong.time + "\n"}
->>>>>>> f433a3ea57e522866c118881266afa50fa4cc2e8
         </Text>
 
         <Text>
@@ -155,7 +112,6 @@ const App = () => {
             <Text>{"subnet:   " + connectedTo.details.bssid + "\n"}</Text>
           </View>
 
-<<<<<<< HEAD
           : connectedTo !== "" && connectedTo.type === 'cellular'
             ? <View>
               <Text>{"connected to:   " + connectedTo.type}</Text>
@@ -189,26 +145,6 @@ const App = () => {
 
       </View>
     </ScrollView>
-=======
-      <Text>{"Available wifi Connection:\n"}</Text>
-      {availableConnection.length > 0
-        ? availableConnection.map((list, i) => {
-          return (
-            <View key={i}>
-              <Text>{"BSSID:  " + list.BSSID}</Text>
-              <Text>{"SSID:   " + list.SSID}</Text>
-              <Text>{"capabilities:   " + list.capabilities}</Text>
-              <Text>{"frequency:  " + list.frequency}</Text>
-              <Text>{"level:  " + list.level}</Text>
-              <Text>{"timestamp:  " + list.timestamp + "\n"}</Text>
-            </View>
-          )
-        })
-
-        : <Text>No connection available</Text>}
-
-    </View>
->>>>>>> f433a3ea57e522866c118881266afa50fa4cc2e8
   );
 };
 
